@@ -1,0 +1,23 @@
+.jumbotron {
+    background: #fff;
+    border: 2px solid #333;
+    text-align: center;
+}
+
+.glyphicon {
+    font-size: 200px;
+}
+
+#server_messages {
+    background: #fff;
+    border: 2px solid #333;
+    border-radius: 6px;
+    margin: 40px auto;
+    padding: 10px;
+    text-align: left;
+}
+
+#server_messages p {
+    font-family: "Courier New", Courier, monospace;
+
+}
