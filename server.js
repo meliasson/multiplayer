@@ -53,18 +53,17 @@ wss.on('connection', function connection(client, req) {
 var games = new Map();
 function joinOrCreateGame(userId) {
   if (games.size === 0) {
-    newGame = { id: uuidv1(), player_1: userId };
+    newGame = { id: uuidv1(), player1: userId };
     games.set(newGame.id, newGame);
     return 'waiting_for_player_2'
-  }
-  else {
+  } else {
     for (var [gameId, game] of games) {
-      if (game.player_2 === undefined) {
-        game.player_2 = uuidv1();
+      if (game.player2 === undefined) {
+        game.player2 = uuidv1();
         return 'game_found'
       }
     }
-    newGame = { id: uuidv1(), player_1: userId };
+    newGame = { id: uuidv1(), player1: userId };
     games.set(newGame.id, newGame);
     return 'waiting_for_player_2'
   }
@@ -72,10 +71,9 @@ function joinOrCreateGame(userId) {
 
 // Game loops
 
-function physicsLoop()
-{
+function physicsLoop() {
   for (var [gameId, game] of games) {
-    if (game.player_2 === undefined) {
+    if (game.player2 === undefined) {
       continue;
     }
 

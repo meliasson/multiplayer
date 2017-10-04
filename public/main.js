@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   ws.onopen = function() {
     utils.debug("WebSocket connection established");
+    ws.send('')
   };
 
   ws.onclose = function() {
