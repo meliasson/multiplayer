@@ -78,7 +78,7 @@ function physicsLoop() {
     }
 
     for (var client of wss.clients) {
-      client.send('Hahahaha!');
+      // client.send('Hahahaha!');
     }
   }
 }
