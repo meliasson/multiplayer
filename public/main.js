@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", function(event) {
+  utils.settings = settings;
+
   var ws = new WebSocket(`ws://${location.host}`);
 
   ws.onerror = function() {
@@ -6,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   };
 
   ws.onopen = function() {
-    utils.log("WebSocket connection established");
+    utils.debug("WebSocket connection established");
   };
 
   ws.onclose = function() {

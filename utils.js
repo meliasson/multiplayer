@@ -1,7 +1,7 @@
-(function initUtils(exports) {
-  exports.log = function() {
-    if (verbose === true) {
+(function utils(exports) {
+  exports.debug = function() {
+    if (this.settings.logLevel === 'debug') {
       console.log.apply(this, arguments);
     }
   };
-})(typeof exports === 'undefined'? this['utils'] = {} : exports);
+})(typeof exports === 'undefined' ? this['utils'] = {} : exports);

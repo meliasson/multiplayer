@@ -5,6 +5,8 @@ var uuidv1 = require('uuid/v1');
 var WebSocket = require('ws');
 
 var utils = require('./utils');
+var settings = require('./settings');
+utils.settings = settings;
 
 // Express
 
@@ -30,7 +32,7 @@ var server = http.createServer(app);
 var wss = new WebSocket.Server({ server });
 wss.on('connection', function connection(client, req) {
   client.id = uuidv1();
-  utils.log('Client %s connected', client.id);
+  utils.debug('Client %s connected', client.id);
 
   client.on('message', function incoming(message) {
     console.log('Client %s sent %s', client.id, message);
