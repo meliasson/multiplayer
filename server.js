@@ -8,6 +8,8 @@ var utils = require('./utils');
 var settings = require('./settings');
 utils.settings = settings;
 
+var games = new Map();
+
 // Express
 
 var app = express();
@@ -44,28 +46,28 @@ wss.on('connection', function connection(client, req) {
   });
 
   client.send(JSON.stringify({ event: 'connection_established', id: client.id }));
-  gameState = joinOrCreateGame(client.id);
-  client.send(JSON.stringify({ event: gameState }));
+  game = joinOrCreateGame(games, client);
+  client.send(JSON.stringify({ event: game.state }));
 });
 
 // Game lobby
 
-var games = new Map();
-function joinOrCreateGame(userId) {
+function joinOrCreateGame(games, user) {
   if (games.size === 0) {
-    newGame = { id: uuidv1(), player1: userId };
+    newGame = { id: uuidv1(), player1: user, state: 'waiting_for_player_2' };
     games.set(newGame.id, newGame);
-    return 'waiting_for_player_2'
+    return newGame;
   } else {
     for (var [gameId, game] of games) {
       if (game.player2 === undefined) {
-        game.player2 = uuidv1();
-        return 'game_found'
+        game.player2 = user;
+        game.state = 'game_found';
+        return game;
       }
     }
-    newGame = { id: uuidv1(), player1: userId };
+    newGame = { id: uuidv1(), player1: user, state: 'waiting_for_player_2' };
     games.set(newGame.id, newGame);
-    return 'waiting_for_player_2'
+    return newGame;
   }
 }
 
@@ -77,8 +79,10 @@ function physicsLoop() {
       continue;
     }
 
-    for (var client of wss.clients) {
-      // client.send('Hahahaha!');
+    if (game.state === 'game_found') {
+      game.state = 'game_started';
+      game.player1.send(JSON.stringify({ event: game.state }));
+      game.player2.send(JSON.stringify({ event: game.state }));
     }
   }
 }
