@@ -1,27 +1,62 @@
+window.multiplayer = {}
+
 document.addEventListener('DOMContentLoaded', function(event) {
   utils.settings = settings;
 
-  var ws = new WebSocket(`ws://${location.host}`);
+  window.multiplayer.ws = new WebSocket(`ws://${location.host}`);
 
-  ws.onerror = function() {
+  window.multiplayer.ws.onerror = function() {
     utils.debug('WebSocket error');
   };
 
-  ws.onopen = function() {
+  window.multiplayer.ws.onopen = function() {
     utils.debug('WebSocket connection established');
-    // ws.send('I connected!')
   };
 
-  ws.onclose = function() {
+  window.multiplayer.ws.onclose = function() {
     utils.debug('WebSocket connection closed');
   };
 
-  ws.onmessage = function (message) {
+  window.multiplayer.ws.onmessage = function (message) {
     utils.debug('Received message %s', message.data);
     messageData = JSON.parse(message.data);
-    output = document.createElement('p');
-    output.textContent = messageData.event;
-    var serverMessages = document.getElementById('server_messages');
-    serverMessages.appendChild(output);
+
+    if (messageData.status == 'starting') {
+      window.multiplayer.clientId = messageData.clientId;
+    }
+
+    // if (messageData.status !== 'game_running') {
+    //   output = document.createElement('p');
+    //   output.textContent = messageData.status;
+    //   utils.debug(document.getElementById('messages'));
+    //   var messages = document.getElementById('messages');
+    //   messages.appendChild(output);
+    // }
+
+    // if (messageData.status === 'game_running') {
+    //   me = document.createElement('span');
+    //   me.classList.add('player');
+    //   me.id = 'player1';
+    //   opponent = document.createElement('span');
+    //   opponent.classList.add('player');
+    //   opponent.id = 'player2';
+    //   for (var i = 0; i < messageData.positions.length; i++) {
+    //     if (messageData.positions[i].player === 'you') {
+    //       me.style.left = messageData.positions[0] * 10 + 'px';
+    //     } else if (messageData.positions[i].player === 'opponent') {
+    //       opponent.style.left = messageData.positions[0] * 10 + 'px';
+    //     }
+    //   }
+
+    //   var game = document.getElementById('game');
+    //   game.appendChild(me);
+    //   game.appendChild(opponent);
+    // }
   }
+});
+
+document.addEventListener("keydown", function(event) {
+  utils.debug('Key %s pressed', event.keyCode);
+  window.multiplayer.keyDown = event.keyCode;
+  window.multiplayer.ws.send(JSON.stringify({ action: 'move' }));
 });

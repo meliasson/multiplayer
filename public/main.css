@@ -1,23 +1,42 @@
+body {
+  padding-top: 50px;
+}
+
 .jumbotron {
-    background: #fff;
-    border: 2px solid #333;
-    text-align: center;
+  background: #fff;
+  border: 2px solid #333;
+  text-align: center;
 }
 
 .glyphicon {
-    font-size: 200px;
+  font-size: 200px;
 }
 
-#server_messages {
-    background: #fff;
-    border: 2px solid #333;
-    border-radius: 6px;
-    margin: 40px auto;
-    padding: 10px;
-    text-align: left;
+#game {
+  background: #333;
+  border: 2px solid #333;
+  border-radius: 6px;
+  height: 200px;
+  position: relative;
 }
 
-#server_messages p {
-    font-family: "Courier New", Courier, monospace;
+#game span.player {
+  background: red;
+  height: 40px;
+  position: absolute;
+  top: 80px;
+  width: 40px;
+}
 
+#messages {
+  background: #fff;
+  border: 2px solid #333;
+  border-radius: 6px;
+  margin: 40px auto;
+  padding: 10px;
+  text-align: left;
+}
+
+#messages p {
+  font-family: "Courier New", Courier, monospace;
 }

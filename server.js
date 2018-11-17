@@ -35,54 +35,65 @@ var wss = new WebSocket.Server({ server });
 wss.on('connection', function connection(client, req) {
   client.id = uuidv1();
   utils.debug('Client %s connected', client.id);
+  joinGame(games, client);
+  client.send(JSON.stringify({ status: 'starting', clientId: client.id }));
 
   client.on('message', function incoming(message) {
-    console.log('Client %s sent %s', client.id, message);
+    utils.debug('Client %s sent %s', client.id, message);
+    messageData = JSON.parse(message);
+    if (messageData.action == 'move') {
+      // client.position = [client.position[0] + 1, client.position[1]];
+    }
   });
 
   client.on('close', function incoming(message) {
-    console.log('Client %s closed connection', client.id);
+    utils.debug('Client %s closed connection', client.id);
     this.terminate();
   });
-
-  client.send(JSON.stringify({ event: 'connection_established', id: client.id }));
-  game = joinOrCreateGame(games, client);
-  client.send(JSON.stringify({ event: game.state }));
 });
 
 // Game lobby
 
-function joinOrCreateGame(games, user) {
-  if (games.size === 0) {
-    newGame = { id: uuidv1(), player1: user, state: 'waiting_for_player_2' };
-    games.set(newGame.id, newGame);
-    return newGame;
-  } else {
+function joinGame(games, client) {
+  var gameToJoin;
+
+  if (games.size) {
     for (var [gameId, game] of games) {
-      if (game.player2 === undefined) {
-        game.player2 = user;
-        game.state = 'game_found';
-        return game;
+      if (game.clients.length < 2) {
+        utils.debug('Client joining game');
+        gameToJoin = game;
       }
     }
-    newGame = { id: uuidv1(), player1: user, state: 'waiting_for_player_2' };
-    games.set(newGame.id, newGame);
-    return newGame;
   }
+
+  if (!gameToJoin) {
+    utils.debug('Client creating game');
+    gameToJoin = { id: uuidv1(), clients: [], status: 'running' };
+  }
+
+  client.position = getInitialClientPosition(gameToJoin);
+  gameToJoin.clients.push(client);
+  games.set(gameToJoin.id, gameToJoin);
+}
+
+function getInitialClientPosition(game) {
+  return [Math.floor(Math.random() * Math.floor(10)), 0];
 }
 
 // Game loops
 
 function physicsLoop() {
   for (var [gameId, game] of games) {
-    if (game.player2 === undefined) {
-      continue;
+    clients = [];
+
+    for (var client of game.clients) {
+      clients.push({ id: client.id, position: client.position })
     }
 
-    if (game.state === 'game_found') {
-      game.state = 'game_started';
-      game.player1.send(JSON.stringify({ event: game.state }));
-      game.player2.send(JSON.stringify({ event: game.state }));
+    message = JSON.stringify({ status: game.status, clients: clients });
+
+    for (var client of game.clients) {
+      client.send(message);
     }
   }
 }
@@ -90,9 +101,9 @@ function physicsLoop() {
 // Start server
 
 server.listen(3000, function listening() {
-  console.log('Server listening on port %d', server.address().port);
+  utils.debug('Server listening on port %d', server.address().port);
 });
 
 // Start physics loop
 
-setInterval(physicsLoop, 15);
+setInterval(physicsLoop, 1000);
