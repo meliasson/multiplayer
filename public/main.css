@@ -13,7 +13,7 @@ body {
 }
 
 #game {
-  background: #333;
+  /* background: #333; */
   border: 2px solid #333;
   border-radius: 6px;
   height: 200px;

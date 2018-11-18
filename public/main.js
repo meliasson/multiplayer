@@ -1,5 +1,26 @@
 window.multiplayer = {}
 
+window.multiplayer.render = function(clients) {
+  var canvas = document.getElementById('game');
+  var context = canvas.getContext("2d");
+  context.clearRect(0, 0, canvas.width, canvas.height);
+
+  for (var client of clients) {
+    utils.debug(client);
+
+    var character;
+
+    if (client.id === multiplayer.clientId) {
+      character = 'ME';
+    }
+    else {
+      character = 'OPPONENT';
+    }
+
+    context.fillText(character, client.position[0] * 30, client.position[1] * 30);
+  }
+}
+
 document.addEventListener('DOMContentLoaded', function(event) {
   utils.settings = settings;
 
@@ -23,6 +44,8 @@ document.addEventListener('DOMContentLoaded', function(event) {
 
     if (messageData.status == 'starting') {
       window.multiplayer.clientId = messageData.clientId;
+    } else if (messageData.status == 'running') {
+      window.multiplayer.render(messageData.clients);
     }
 
     // if (messageData.status !== 'game_running') {

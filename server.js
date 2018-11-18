@@ -77,7 +77,7 @@ function joinGame(games, client) {
 }
 
 function getInitialClientPosition(game) {
-  return [Math.floor(Math.random() * Math.floor(10)), 0];
+  return [Math.floor(Math.random() * Math.floor(10)) + 1, 10];
 }
 
 // Game loops
