@@ -3,26 +3,11 @@
   <head>
     <% include ../partials/head %>
   </head>
-  <body class="container">
-    <%if (false) {%>
-      <footer>
-        <% include ../partials/header %>
-      </footer>
-    <%} %>
-    <main>
-      <div class="jumbotron">
-        <span class="glyphicon glyphicon-thumbs-up"></span>
-      </div>
-      <canvas id="game" width="960px" height="421px" style="width: 960px; height: 421px;"></canvas>
-      <div id="messages"></div>
-    </main>
-    <%if (false) {%>
-      <footer>
-        <% include ../partials/footer %>
-      </footer>
-    <%} %>
-    <script src="main.js"></script>
-    <script src="utils.js"></script>
+  <body>
+    <canvas id="game" width="400" height="300px" style="width: 400px; height: 300px;"></canvas>
+    <script src="client.js"></script>
+    <script src="core.js"></script>
     <script src="settings.js"></script>
+    <script src="utils.js"></script>
   </body>
 </html>

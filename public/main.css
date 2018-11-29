@@ -2,18 +2,7 @@ body {
   padding-top: 50px;
 }
 
-.jumbotron {
-  background: #fff;
-  border: 2px solid #333;
-  text-align: center;
-}
-
-.glyphicon {
-  font-size: 200px;
-}
-
 #game {
-  /* background: #333; */
   border: 2px solid #333;
   border-radius: 6px;
   height: 200px;
